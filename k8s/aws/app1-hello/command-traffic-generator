@@ -1,0 +1,5 @@
+while ($true) {
+>>     curl.exe -H "Connection: close"  http://a11800dc24e7146fb9022b0d2c59e510-226778799.us-east-1.elb.amazonaws.com/
+>>     echo ""
+>>     Start-Sleep 1
+>> }

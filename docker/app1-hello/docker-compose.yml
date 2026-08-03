@@ -1,0 +1,28 @@
+services:
+  hello-py:
+  # this build will use the Dockerfile in the python directory to build the image for the hello-py service
+    build: ./python
+    image: badeapaul3/hello-python:1.0
+    ports:
+      - 3000:3000
+    environment:
+      - ENV_VALUE=${ENV_VALUE}
+  
+  hello-node:
+  # this build will use the Dockerfile in the python directory to build the image for the hello-py service
+    build: ./node
+    image: badeapaul3/hello-node:1.0
+    ports:
+      - 3001:3000
+    environment:
+      - ENV_VALUE=${ENV_VALUE}
+  
+  hello-spring:
+  # this build will use the Dockerfile in the python directory to build the image for the hello-py service
+  # if build is not specified, docker-compose will look for a Dockerfile locally, if not found the image will be pulled from docker hub
+    build: ./springboot/hello-spring
+    image: badeapaul3/hello-spring:1.0
+    ports:
+      - 8080:8080
+    environment:
+      - ENV_VALUE=${ENV_VALUE}

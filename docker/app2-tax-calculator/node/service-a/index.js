@@ -31,7 +31,7 @@ app.get("/price", async (req, res) => {
     service: "A",
     amount,
     tax,
-    total: amount + tax,
+    total: amount + (amount * tax/100),
     container: HOSTNAME,
     service_b_container: r.data.container
   });
