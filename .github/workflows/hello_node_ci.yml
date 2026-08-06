@@ -2,8 +2,8 @@ name: Node CI App1
 
 on:
     push:
-        # paths:
-        #     - 'docker/app1-hello/nodejs/hello-node/**'
+        paths:
+            - 'docker/app1-hello/node/**'
     workflow_dispatch:
 
 jobs:
