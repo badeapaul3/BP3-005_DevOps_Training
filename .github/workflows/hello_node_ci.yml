@@ -1,4 +1,4 @@
-name: Second CI
+name: Node CI App1
 
 on:
     push:
