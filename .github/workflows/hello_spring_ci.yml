@@ -1,4 +1,4 @@
-name: Hello Spring Boot App 1 to Docker
+name: Spring Boot CI App1
 
 on:
     push:
