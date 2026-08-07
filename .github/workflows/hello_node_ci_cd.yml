@@ -1,0 +1,84 @@
+name: Node CI App1 to AWS EKS
+
+on:
+    push:
+        paths:
+            - 'docker/app1-hello/node/**'
+    workflow_dispatch:
+
+jobs:
+    build-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Setup node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 26
+
+            - name: Install dependencies
+              working-directory: docker/app1-hello/node
+              run: npm ci
+
+            - name: Run tests (if any)
+              working-directory: docker/app1-hello/node
+              run: npm test --if-present
+
+
+
+    docker-build-push:
+        runs-on: ubuntu-latest
+        needs: build-test
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Login to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKER_USERNAME }}
+                  password: ${{ secrets.DOCKER_PASSWORD }}
+
+            - name: Build and Push Docker Image
+              uses: docker/build-push-action@v6
+              with:
+                  context: docker/app1-hello/node
+                  push: true
+                  tags: | 
+                    ${{ secrets.DOCKER_USERNAME }}/hello-node:latest
+                    ${{ secrets.DOCKER_USERNAME }}/hello-node:v3.1
+
+    deploy-aws-eks:
+        runs-on: ubuntu-latest
+        needs: docker-build-push
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v7
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v5.1.1
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: us-east-1
+            
+            - name: Set up kubectl
+              uses: azure/setup-kubectl@v4
+              with:
+                  version: 'latest'
+
+            - name: Update kubeconfig for EKS cluster
+              run: |
+                aws eks update-kubeconfig --name hello-cluster --region us-east-1
+              
+            - name: Verify connection to EKS cluster
+              run: kubectl get nodes
+
+            - name: Deploy to AWS EKS
+              run: kubectl apply -f k8s/aws/app1-hello
+        
+
