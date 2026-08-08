@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: service-b
-          image: badeapaul3/tax-service-b:latest
+          image: badeapaul3/tax-service-b:pylatest
           ports:
             - containerPort: 4000
 ---
