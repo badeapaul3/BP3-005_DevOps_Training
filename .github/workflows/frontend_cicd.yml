@@ -1,4 +1,4 @@
-name: Tax Calc Spring CICD AWS EKS
+name: FRONTEND CICD AWS EKS
 
 on:
     # push:
